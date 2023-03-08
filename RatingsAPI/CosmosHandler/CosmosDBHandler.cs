@@ -8,7 +8,7 @@ namespace RatingsAPI.CosmosHandler
 {
      internal class CosmosDBHandler : ICosmosHandler
     {
-        [CosmosDBOutput("ratings", "ratingContainer", Connection = "AccountEndpoint=https://dbopenhack.documents.azure.com:443/;AccountKey=8mACCpRZd82cWPrrfA3yxej446nRHi2LFrqw9qEPKDoZH49KkVBFM8WaSme4xdAkn9aNZmtacJvzACDbiQ5SZw==", CreateIfNotExists = true)]
+        [CosmosDBOutput("ratings", "ratingContainer", Connection = "CosmosDBConnectionString", CreateIfNotExists = true)]
         public object StoreRating(Rating rating)
         {
             return rating;
