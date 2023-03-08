@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -24,44 +25,65 @@ namespace RatingsAPI
         }
 
         [Function("CreateRating")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+       
+        public RatingOutput Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
         {
             _logger.LogInformation("Create Rating function called.");
 
             var ratingsRequest = req.ReadFromJsonAsync<RatingsRequest>().Result;
 
+            HttpResponseData response = null;
+
             if (ratingsRequest == null)
             {
-                return ResponseCreator.CreateInvalidRequestResponse(req);
+                response = ResponseCreator.CreateInvalidRequestResponse(req);
+
+                return new RatingOutput()
+                {
+                    Response = response
+                };
             }
 
             if (ratingsRequest.rating < 0 || ratingsRequest.rating > 5)
             {
-                return ResponseCreator.CreateInvalidRequestResponse(req);
+                response = ResponseCreator.CreateInvalidRequestResponse(req);
+
+                return new RatingOutput()
+                {
+                    Response = response
+                };
             }
 
             if (!ValidateInputParams<User>(ratingsRequest.userId, "api/GetUser?userId="))
             {
-                return ResponseCreator.CreateInvalidRequestResponse(req);
+                response = ResponseCreator.CreateInvalidRequestResponse(req);
+
+                return new RatingOutput()
+                {
+                    Response = response
+                };
             }
 
             if (!ValidateInputParams<Product>(ratingsRequest.productId, "api/GetProduct?productId="))
             {
-                return ResponseCreator.CreateInvalidRequestResponse(req);
+                response = ResponseCreator.CreateNotFoundResponse(req);
+
+                return new RatingOutput()
+                {
+                    Response = response
+                };
             }
 
             Rating rating = new Rating(ratingsRequest);
 
-            try
-            {
-                CosmosHandler.StoreRating(rating);
-            }
-            catch (Exception)
-            {
-                return ResponseCreator.CreateInvalidRequestResponse(req);
-            }
 
-            return ResponseCreator.CreateOKResponse(req, rating);
+            response = ResponseCreator.CreateOKResponse(req, rating);
+            var retVal = new RatingOutput()
+            {
+                Rating = rating,
+                Response = response
+            };
+            return retVal;
         }
 
 
