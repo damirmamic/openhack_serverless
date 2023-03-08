@@ -1,7 +1,12 @@
+using System;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using RatingsAPI.GuardClauses;
+using RatingsAPI.ModelClasses;
 
 namespace RatingsAPI
 {
@@ -15,16 +20,15 @@ namespace RatingsAPI
         }
 
         [Function("GetRatings")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, string userId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
-            response.WriteString("Welcome to Azure Functions!");
-
-            return response;
+            return Guards.CreateOKResponse(req);
         }
+
+
+
+
     }
 }
