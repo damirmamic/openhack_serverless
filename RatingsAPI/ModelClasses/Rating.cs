@@ -1,6 +1,6 @@
 ﻿namespace RatingsAPI.ModelClasses
 {
-    public class Rating
+    internal class Rating
     {
         public string id { get; set; }
         public string userId { get; set; }
