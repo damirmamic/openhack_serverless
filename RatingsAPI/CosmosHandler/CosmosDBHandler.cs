@@ -2,6 +2,7 @@
 using RatingsAPI.ModelClasses;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker;
+using System.Net.Http.Headers;
 
 namespace RatingsAPI.CosmosHandler
 {
@@ -33,7 +34,20 @@ namespace RatingsAPI.CosmosHandler
 
         public IEnumerable<Rating> GetRatingsBy(string userId)
         {
-            return new List<Rating>();
+            List<Rating> retVal = new List<Rating>();
+
+            RatingsRequest rr = new RatingsRequest()
+            {
+                locationName = "new location name",
+                productId = "new Product ID",
+                rating = 3,
+                userId = userId,
+                userNotes = "new user notes"
+            };
+
+            retVal.Add(new Rating(rr));
+
+            return retVal;
         }
     }
 }

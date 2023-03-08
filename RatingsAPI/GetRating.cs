@@ -3,6 +3,8 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using RatingsAPI.CosmosHandler;
+using RatingsAPI.GuardClauses;
+using RatingsAPI.ModelClasses;
 
 namespace RatingsAPI
 {
@@ -21,16 +23,13 @@ namespace RatingsAPI
         }
 
         [Function("GetRating")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,String ratingId)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-                      
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            response.WriteString("Get Rating for !"+ratingId);
+            var rating = CosmosHandler.GetRatingBy(ratingId);
 
-            return response;
+            return ResponseCreator.CreateOKResponse(req, rating);
         }
     }
 }
