@@ -5,16 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace RatingsAPI
 {
-    public class Function1
+    public class GetRatings
     {
         private readonly ILogger _logger;
 
-        public Function1(ILoggerFactory loggerFactory)
+        public GetRatings(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<Function1>();
+            _logger = loggerFactory.CreateLogger<GetRatings>();
         }
 
-        [Function("Function1")]
+        [Function("GetRatings")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
