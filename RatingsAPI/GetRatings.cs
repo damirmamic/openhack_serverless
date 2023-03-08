@@ -20,6 +20,7 @@ namespace RatingsAPI
         public GetRatings(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<GetRatings>();
+            CosmosHandler = new CosmosDBHandler();
         }
 
         [Function("GetRatings")]

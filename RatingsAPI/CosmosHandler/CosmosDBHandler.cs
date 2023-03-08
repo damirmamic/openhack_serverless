@@ -5,7 +5,7 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace RatingsAPI.CosmosHandler
 {
-     internal class CosmosHandler : ICosmosHandler
+     internal class CosmosDBHandler : ICosmosHandler
     {
         [CosmosDBOutput("dbopenhack", "ratings", 
          Connection = "AccountEndpoint=https://dbopenhack.documents.azure.com:443/;AccountKey=8mACCpRZd82cWPrrfA3yxej446nRHi2LFrqw9qEPKDoZH49KkVBFM8WaSme4xdAkn9aNZmtacJvzACDbiQ5SZw==", CreateIfNotExists = true)]
@@ -23,17 +23,17 @@ namespace RatingsAPI.CosmosHandler
 
         public void StoreRating(Rating rating)
         {
-            throw new NotImplementedException();
+           
         }
 
         public Rating GetRatingBy(string ratingId)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public IEnumerable<Rating> GetRatingsBy(string userId)
         {
-            throw new NotImplementedException();
+            return new List<Rating>();
         }
     }
 }
