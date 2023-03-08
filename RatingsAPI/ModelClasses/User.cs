@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RatingsAPI.ModelClasses
 {
-    internal class User
+    public class User
     {
         public string userId { get; set; }
         public string userName { get; set; }

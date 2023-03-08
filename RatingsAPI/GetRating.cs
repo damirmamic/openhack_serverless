@@ -2,12 +2,17 @@ using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using RatingsAPI.CosmosHandler;
 
 namespace RatingsAPI
 {
     public class GetRating
     {
         private readonly ILogger _logger;
+
+        private ICosmosHandler cosmosHandler;
+
+        protected ICosmosHandler CosmosHandler { get; set; }
 
         public GetRating(ILoggerFactory loggerFactory)
         {

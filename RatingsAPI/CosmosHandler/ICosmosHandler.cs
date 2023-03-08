@@ -2,7 +2,7 @@
 
 namespace RatingsAPI.CosmosHandler
 {
-    internal interface ICosmosHandler
+    public interface ICosmosHandler
     {
         void StoreRating(Rating rating);
 

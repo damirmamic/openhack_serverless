@@ -1,6 +1,7 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using RatingsAPI.CosmosHandler;
 using RatingsAPI.GuardClauses;
 using RatingsAPI.ModelClasses;
 using System.Net.Http.Headers;
@@ -11,6 +12,10 @@ namespace RatingsAPI
     public class CreateRating
     {
         private readonly ILogger _logger;
+
+        private ICosmosHandler cosmosHandler;
+
+        protected ICosmosHandler CosmosHandler { get; set; }
 
         public CreateRating(ILoggerFactory loggerFactory)
         {
@@ -26,27 +31,36 @@ namespace RatingsAPI
 
             if (ratingsRequest == null)
             {
-                return Guards.CreateInvalidRequestResponse(req);
+                return ResponseCreator.CreateInvalidRequestResponse(req);
             }
 
             if (ratingsRequest.rating < 0 || ratingsRequest.rating > 5)
             {
-                return Guards.CreateInvalidRequestResponse(req);
+                return ResponseCreator.CreateInvalidRequestResponse(req);
             }
 
             if (!ValidateInputParams<User>(ratingsRequest.userId, "api/GetUser?userId="))
             {
-                return Guards.CreateInvalidRequestResponse(req);
+                return ResponseCreator.CreateInvalidRequestResponse(req);
             }
 
             if (!ValidateInputParams<Product>(ratingsRequest.productId, "api/GetProduct?productId="))
             {
-                return Guards.CreateInvalidRequestResponse(req);
+                return ResponseCreator.CreateInvalidRequestResponse(req);
             }
 
             Rating rating = new Rating(ratingsRequest);
 
-            return Guards.CreateOKResponse(req, rating);
+            try
+            {
+                CosmosHandler.StoreRating(rating);
+            }
+            catch (Exception)
+            {
+                return ResponseCreator.CreateInvalidRequestResponse(req);
+            }
+
+            return ResponseCreator.CreateOKResponse(req, rating);
         }
 
 

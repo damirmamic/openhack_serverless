@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using RatingsAPI.CosmosHandler;
 using RatingsAPI.GuardClauses;
 using RatingsAPI.ModelClasses;
 
@@ -13,6 +14,8 @@ namespace RatingsAPI
     public class GetRatings
     {
         private readonly ILogger _logger;
+        private ICosmosHandler cosmosHandler;
+        protected ICosmosHandler CosmosHandler { get; set; }
 
         public GetRatings(ILoggerFactory loggerFactory)
         {

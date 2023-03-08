@@ -4,14 +4,14 @@ using System.Net;
 
 namespace RatingsAPI.GuardClauses
 {
-    internal class Guards
+    internal class ResponseCreator
     {
-        public static HttpResponseData CreateOKResponse(HttpRequestData req, Rating requestResponse)
+        public static HttpResponseData CreateOKResponse<T>(HttpRequestData req, T responseData)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
             //response.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
-            response.WriteAsJsonAsync<Rating>(requestResponse);
+            response.WriteAsJsonAsync<T>(responseData);
 
             return response;
         }
