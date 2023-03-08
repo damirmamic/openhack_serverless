@@ -7,24 +7,12 @@ namespace RatingsAPI.CosmosHandler
 {
      internal class CosmosHandler : ICosmosHandler
     {
-        [CosmosDBOutput("dbopenhack", "ratings", 
-         Connection = "AccountEndpoint=https://dbopenhack.documents.azure.com:443/;AccountKey=8mACCpRZd82cWPrrfA3yxej446nRHi2LFrqw9qEPKDoZH49KkVBFM8WaSme4xdAkn9aNZmtacJvzACDbiQ5SZw==", CreateIfNotExists = true)]
-        public object ReadFromDatabase(
-            [CosmosDBTrigger("dbopenhack", "ratings", Connection = "AccountEndpoint=https://dbopenhack.documents.azure.com:443/;AccountKey=8mACCpRZd82cWPrrfA3yxej446nRHi2LFrqw9qEPKDoZH49KkVBFM8WaSme4xdAkn9aNZmtacJvzACDbiQ5SZw==", CreateLeaseContainerIfNotExists = true)] IReadOnlyList<Rating> input)
+        [CosmosDBOutput("dbopenhack", "ratings", Connection = "AccountEndpoint=https://dbopenhack.documents.azure.com:443/;AccountKey=8mACCpRZd82cWPrrfA3yxej446nRHi2LFrqw9qEPKDoZH49KkVBFM8WaSme4xdAkn9aNZmtacJvzACDbiQ5SZw==", CreateIfNotExists = true)]
+        public object StoreRating(Rating rating)
         {
-            if (input != null && input.Any())
-            {
-                // Cosmos Output
-                return input.Select(p => new { id = p.id });
-            }
-
-            return null;
+            return rating;
         }
 
-        public void StoreRating(Rating rating)
-        {
-            throw new NotImplementedException();
-        }
 
         public Rating GetRatingBy(string ratingId)
         {

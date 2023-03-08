@@ -4,7 +4,7 @@ namespace RatingsAPI.CosmosHandler
 {
     public interface ICosmosHandler
     {
-        void StoreRating(Rating rating);
+        object StoreRating(Rating rating);
 
         Rating GetRatingBy(string ratingId);
 
