@@ -24,7 +24,7 @@ namespace RatingsAPI
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            return Guards.CreateOKResponse(req);
+            return Guards.CreateOKResponse(req, null);
         }
 
 

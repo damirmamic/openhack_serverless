@@ -1,24 +1,20 @@
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using RatingsAPI.GuardClauses;
 using RatingsAPI.ModelClasses;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace RatingsAPI
 {
     public class CreateRating
     {
         private readonly ILogger _logger;
-        private readonly HttpClient _httpClient;
 
         public CreateRating(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<CreateRating>();
-            _httpClient = new HttpClient();
         }
 
         [Function("CreateRating")]
@@ -26,10 +22,14 @@ namespace RatingsAPI
         {
             _logger.LogInformation("Create Rating function called.");
 
-
             var ratingsRequest = req.ReadFromJsonAsync<RatingsRequest>().Result;
 
             if (ratingsRequest == null)
+            {
+                return Guards.CreateInvalidRequestResponse(req);
+            }
+
+            if (ratingsRequest.rating < 0 || ratingsRequest.rating > 5)
             {
                 return Guards.CreateInvalidRequestResponse(req);
             }
@@ -44,12 +44,9 @@ namespace RatingsAPI
                 return Guards.CreateInvalidRequestResponse(req);
             }
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+            Rating rating = new Rating(ratingsRequest);
 
-            response.WriteString("Welcome to Azure Functions!");
-
-            return response;
+            return Guards.CreateOKResponse(req, rating);
         }
 
 
