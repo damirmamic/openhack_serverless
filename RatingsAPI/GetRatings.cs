@@ -30,6 +30,11 @@ namespace RatingsAPI
             
             var ratings= CosmosHandler.GetRatingsBy(userId);
 
+            if (ratings == null || !ratings.Any())
+            {
+                return ResponseCreator.CreateNotFoundResponse(req);
+            }
+
             return ResponseCreator.CreateOKResponse(req, ratings);
            
         }

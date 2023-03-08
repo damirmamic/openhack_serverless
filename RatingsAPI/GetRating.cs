@@ -25,9 +25,14 @@ namespace RatingsAPI
         [Function("GetRating")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("Get Rating function called.");
 
             var rating = CosmosHandler.GetRatingBy(ratingId);
+
+            if (rating == null)
+            {
+                return ResponseCreator.CreateNotFoundResponse(req);
+            }
 
             return ResponseCreator.CreateOKResponse(req, rating);
         }
