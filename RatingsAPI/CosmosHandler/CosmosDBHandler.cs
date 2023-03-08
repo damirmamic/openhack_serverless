@@ -29,7 +29,18 @@ namespace RatingsAPI.CosmosHandler
 
         public Rating GetRatingBy(string ratingId)
         {
-            return null;
+            RatingsRequest rr = new RatingsRequest()
+            {
+                locationName = "new location name",
+                productId = "new Product ID",
+                rating = 3,
+                userId = "someUserId",
+                userNotes = "new user notes"
+            };
+
+            Rating rating = new Rating(rr);
+            rating.id = ratingId;
+            return rating;
         }
 
         public IEnumerable<Rating> GetRatingsBy(string userId)
