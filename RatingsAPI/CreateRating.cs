@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -33,9 +34,12 @@ namespace RatingsAPI
                 return Guards.CreateInvalidRequestResponse(req);
             }
 
-            User user;
+            if (!ValidateInputParams<User>(ratingsRequest.userId, "api/GetUser?userId="))
+            {
+                return Guards.CreateInvalidRequestResponse(req);
+            }
 
-            if (!TryGetUser(ratingsRequest.userId, out user))
+            if (!ValidateInputParams<Product>(ratingsRequest.productId, "api/GetProduct?productId="))
             {
                 return Guards.CreateInvalidRequestResponse(req);
             }
@@ -49,7 +53,7 @@ namespace RatingsAPI
         }
 
 
-        private bool TryGetUser(string userId, out User user)
+        private bool ValidateInputParams<T>(string id, string param) where T : class
         {
             using var client = new HttpClient();
             client.BaseAddress = new Uri("https://serverlessohapi.azurewebsites.net/");
@@ -57,15 +61,16 @@ namespace RatingsAPI
             client.DefaultRequestHeaders.Accept.Add(
                new MediaTypeWithQualityHeaderValue("application/json"));
             // Get data response
-            var userQueryResult = client.GetAsync("api/GetUser?userId=" + userId).Result;
-            if (userQueryResult.IsSuccessStatusCode)
+            var queryResult = client.GetAsync(param + id).Result;
+            T queryValue = null;
+            if (queryResult.IsSuccessStatusCode)
             {
                 // Parse the response body
-                user = userQueryResult.Content.ReadFromJsonAsync<User>().Result;
-                return true;
+                queryValue = queryResult.Content.ReadFromJsonAsync<T>().Result;
+
+              
             }
-            user = null;
-            return false;
+            return queryValue != null;
         }
     }
 }
