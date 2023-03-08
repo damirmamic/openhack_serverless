@@ -25,5 +25,15 @@ namespace RatingsAPI.GuardClauses
 
             return response;
         }
+
+        public static HttpResponseData CreateNotFoundResponse(HttpRequestData req)
+        {
+            var response = req.CreateResponse(HttpStatusCode.NotFound);
+            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+            response.WriteString("Request not found.");
+
+            return response;
+        }
     }
 }

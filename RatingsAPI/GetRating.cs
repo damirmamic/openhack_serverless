@@ -3,6 +3,8 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using RatingsAPI.CosmosHandler;
+using RatingsAPI.GuardClauses;
+using RatingsAPI.ModelClasses;
 
 namespace RatingsAPI
 {
@@ -17,19 +19,22 @@ namespace RatingsAPI
         public GetRating(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<GetRatings>();
+            CosmosHandler = new CosmosDBHandler();
         }
 
         [Function("GetRating")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,String ratingId)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-                      
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+            _logger.LogInformation("Get Rating function called.");
 
-            response.WriteString("Get Rating for !"+ratingId);
+            var rating = CosmosHandler.GetRatingBy(ratingId);
 
-            return response;
+            if (rating == null)
+            {
+                return ResponseCreator.CreateNotFoundResponse(req);
+            }
+
+            return ResponseCreator.CreateOKResponse(req, rating);
         }
     }
 }

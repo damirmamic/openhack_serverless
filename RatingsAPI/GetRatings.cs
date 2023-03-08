@@ -20,14 +20,23 @@ namespace RatingsAPI
         public GetRatings(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<GetRatings>();
+            CosmosHandler = new CosmosDBHandler();
         }
 
         [Function("GetRatings")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, string userId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+            
+            var ratings= CosmosHandler.GetRatingsBy(userId);
 
-            return ResponseCreator.CreateOKResponse<Rating>(req, null);
+            if (ratings == null || !ratings.Any())
+            {
+                return ResponseCreator.CreateNotFoundResponse(req);
+            }
+
+            return ResponseCreator.CreateOKResponse(req, ratings);
+           
         }
 
 
