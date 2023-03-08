@@ -23,11 +23,16 @@ namespace RatingsAPI
         }
 
         [Function("GetRating")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
+        //String ratingId,
+        [CosmosDBInput(databaseName: "ratings",
+                       containerName: "ratingContainer",
+                       Connection = "CosmosDBConnectionString",
+                       Id ="{Query}")] Rating rating)
         {
             _logger.LogInformation("Get Rating function called.");
 
-            var rating = CosmosHandler.GetRatingBy(ratingId);
+            //var rating = CosmosHandler.GetRatingBy(ratingId);
 
             if (rating == null)
             {
