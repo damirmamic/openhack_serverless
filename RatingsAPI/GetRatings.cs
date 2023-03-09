@@ -34,7 +34,7 @@ namespace RatingsAPI
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             
-            var ratings= CosmosHandler.GetRatingsBy(userId);
+            //var ratings= CosmosHandler.GetRatingsBy(userId);
 
             if (ratings == null || !ratings.Any())
             {
