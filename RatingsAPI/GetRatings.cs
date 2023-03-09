@@ -47,7 +47,7 @@ namespace RatingsAPI
             }
 
 
-            return ResponseCreator.CreateOKResponse(req, ratings);
+            return ResponseCreator.CreateOKResponse(req, retVal);
            
         }
 
