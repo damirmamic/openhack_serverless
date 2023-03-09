@@ -25,21 +25,27 @@ namespace RatingsAPI
 
         [Function("GetRatings")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, 
-        //string userId
+        //string userId,
         [CosmosDBInput(databaseName: "ratings",
                        containerName: "ratingContainer",
                        Connection = "CosmosDBConnectionString",
                        SqlQuery = "select * from ratingContainer r where r.userId = {userId}")] 
-                       IEnumerable<Rating> ratings)
+                       IEnumerable<RatingRead> ratings)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             
-            //var ratings= CosmosHandler.GetRatingsBy(userId);
-
             if (ratings == null || !ratings.Any())
             {
                 return ResponseCreator.CreateNotFoundResponse(req);
             }
+
+            List<Rating> retVal = new List<Rating>(ratings.Count());
+
+            foreach (var ratingRead in ratings)
+            {
+                retVal.Add(new Rating(ratingRead));
+            }
+
 
             return ResponseCreator.CreateOKResponse(req, ratings);
            

@@ -24,22 +24,23 @@ namespace RatingsAPI
 
         [Function("GetRating")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
-        //String ratingId,
+        //string id,
         [CosmosDBInput(databaseName: "ratings",
                        containerName: "ratingContainer",
                        Connection = "CosmosDBConnectionString",
-                       Id ="{Query.id}")] Rating rating)
+                       PartitionKey = "{id}",
+                       Id ="{id}")] RatingRead ratingRead)
         {
             _logger.LogInformation("Get Rating function called.");
 
             //var rating = CosmosHandler.GetRatingBy(ratingId);
 
-            if (rating == null)
+            if (ratingRead == null)
             {
                 return ResponseCreator.CreateNotFoundResponse(req);
             }
 
-            return ResponseCreator.CreateOKResponse(req, rating);
+            return ResponseCreator.CreateOKResponse(req, new Rating(ratingRead));
         }
     }
 }
