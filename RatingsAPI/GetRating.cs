@@ -12,29 +12,39 @@ namespace RatingsAPI
     {
         private readonly ILogger _logger;
 
-        private ICosmosHandler cosmosHandler;
+        private ICosmosDBClientHandler cosmosHandler;
 
-        protected ICosmosHandler CosmosHandler { get; set; }
+        protected ICosmosDBClientHandler CosmosHandler { get; set; }
 
         public GetRating(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<GetRatings>();
-            CosmosHandler = new CosmosDBHandler();
+            CosmosHandler = new CosmosDBClientHandler();
         }
 
         [Function("GetRating")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
+        public RatingOutput Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
         {
             _logger.LogInformation("Get Rating function called.");
 
-            var rating = CosmosHandler.GetRatingBy(ratingId);
+            //var rating = CosmosHandler.GetRatingByAsync(ratingId);
+            var rating = CosmosHandler.GetRatingByAsync(ratingId);
+            HttpResponseData response;
 
-            if (rating == null)
+            if (rating != null)
             {
-                return ResponseCreator.CreateNotFoundResponse(req);
+                response = ResponseCreator.CreateOKResponse(req, rating);
+            }
+            else
+            {
+                response = ResponseCreator.CreateNotFoundResponse(req);
             }
 
-            return ResponseCreator.CreateOKResponse(req, rating);
+            return new RatingOutput()
+                {
+                    Rating = rating,
+                    Response = response
+                };
         }
     }
 }

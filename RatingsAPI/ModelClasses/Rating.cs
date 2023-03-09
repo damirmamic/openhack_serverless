@@ -20,5 +20,21 @@
             rating = ratingsRequest.rating;
             userNotes = ratingsRequest.userNotes;
         }
+
+         public Rating()
+        {
+            id = "";
+            userId = "";
+            productId = "";
+            timestamp = DateTime.MinValue;
+            locationName = "";
+            rating = 0;
+            userNotes = "";
+        }
+
+        // public static implicit operator Rating?(Task<Rating?>? v)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }
