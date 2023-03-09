@@ -23,13 +23,11 @@ namespace RatingsAPI
         }
 
         [Function("GetRating")]
-        public RatingOutput Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,String ratingId)
         {
             _logger.LogInformation("Get Rating function called.");
 
-            //var rating = CosmosHandler.GetRatingByAsync(ratingId);
-            var rating = CosmosHandler.GetRatingByAsync(ratingId);
-            HttpResponseData response;
+            var rating = CosmosHandler.GetRatingBy(ratingId);
 
             if (rating != null)
             {
