@@ -28,7 +28,7 @@ namespace RatingsAPI
         [CosmosDBInput(databaseName: "ratings",
                        containerName: "ratingContainer",
                        Connection = "CosmosDBConnectionString",
-                       Id ="{Query}")] Rating rating)
+                       Id ="{Query.id}")] Rating rating)
         {
             _logger.LogInformation("Get Rating function called.");
 
