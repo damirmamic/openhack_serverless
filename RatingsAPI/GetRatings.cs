@@ -14,13 +14,13 @@ namespace RatingsAPI
     public class GetRatings
     {
         private readonly ILogger _logger;
-        private ICosmosHandler cosmosHandler;
-        protected ICosmosHandler CosmosHandler { get; set; }
+        private ICosmosDBClientHandler cosmosHandler;
+        protected ICosmosDBClientHandler CosmosHandler { get; set; }
 
         public GetRatings(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<GetRatings>();
-            CosmosHandler = new CosmosDBHandler();
+            CosmosHandler = new CosmosDBClientHandler();
         }
 
         [Function("GetRatings")]

@@ -1,0 +1,11 @@
+{
+    "azureFunctions.deploySubpath": "RatingsAPI/bin/Release/net7.0/publish",
+    "azureFunctions.projectLanguage": "C#",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureLogicAppsStandard.deploySubpath": "RatingsAPI/bin/Release/net7.0/publish",
+    "azureFunctions.preDeployTask": "publish (functions)",
+    "azureLogicAppsStandard.projectLanguage": "C#",
+    "azureLogicAppsStandard.projectRuntime": "~4",
+    "azureLogicAppsStandard.preDeployTask": "publish"
+}
